@@ -7,7 +7,8 @@ import '../../utils/app_bar/custom_app_bar.dart';
 
 import '../../utils/colors.dart';
 class RechargeHomePage extends StatelessWidget {
-  const RechargeHomePage({Key? key}) : super(key: key);
+  String title;
+   RechargeHomePage({Key? key,required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class RechargeHomePage extends StatelessWidget {
           ),
         ),
         title: Text(
-          "Mobile Recharge",
+          "$title",
           style: GoogleFonts.quicksand(
             textStyle: const TextStyle(
                 color: AppColors.whiteColor,

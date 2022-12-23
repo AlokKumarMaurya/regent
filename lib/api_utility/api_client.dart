@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,13 +8,16 @@ import 'package:regent/api_utility/constUrl.dart';
 import 'package:regent/getx_controller/login_controller/login_controller.dart';
 
 import '../getx_controller/recharge_controller/recharhe_controller.dart';
+import '../utils/modal/all_dash_board_modals/all_recharge_type.dart';
+import '../utils/modal/drawer_modal/check_balance.dart';
 import '../utils/modal/login_modal.dart';
+import '../utils/modal/recharge_modal/circle_code_modal.dart';
 import '../utils/modal/recharge_modal/operator_list_modal.dart';
 import '../utils/modal/recharge_modal/recharge_modal.dart';
 import '../utils/snackbar.dart';
 
 class APiProvider extends GetConnect {
-
+  var token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1ODk1IiwidG9rZW4iOiJmMDVjZTRjZTYxMDQ2MTA3Mjg3ODdkZGM4ZTNmNTBlNiIsIm5iZiI6MTY3MTYyMDM1MCwiZXhwIjoxNjcyNDg0MzUwLCJpYXQiOjE2NzE2MjAzNTB9.tcDVIdvGMyjX8Y4h6ezh46_PJHctFX66B6ALbLobgPg" ;
   login() async {
     LoginController _loginController = Get.put(LoginController());
     debugPrint("${_loginController.userId.value.text}   ${ _loginController.password.value.text} ") ;
@@ -33,18 +37,17 @@ class APiProvider extends GetConnect {
           LoginModal modal=LoginModal.fromJson((response.body));
           return modal;
         }
-
       }
     } catch (e) {
       debugPrint(e.toString());
-      ShowCustomSnackBar().ErrorSnackBar(e.toString());
+      // ShowCustomSnackBar().ErrorSnackBar(e.toString());
     }
   }
   
   
   getAllServiceOperator()async{
     try{
-      var token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1ODk1IiwidG9rZW4iOiJmMDVjZTRjZTYxMDQ2MTA3Mjg3ODdkZGM4ZTNmNTBlNiIsIm5iZiI6MTY3MTYyMDM1MCwiZXhwIjoxNjcyNDg0MzUwLCJpYXQiOjE2NzE2MjAzNTB9.tcDVIdvGMyjX8Y4h6ezh46_PJHctFX66B6ALbLobgPg" ;
+
            var response=await get(RegentUrl.getAllOperator,headers: {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
@@ -56,7 +59,7 @@ class APiProvider extends GetConnect {
              return modal;
            }
     } catch(e) {
-      ShowCustomSnackBar().ErrorSnackBar(e.toString());
+      // ShowCustomSnackBar().ErrorSnackBar(e.toString());
     }
     }
 
@@ -94,9 +97,6 @@ class APiProvider extends GetConnect {
 
 
     var test="https://roundpay.net/API/TransactionAPI?UserID=15895&Token=f05ce4ce6104610728787ddc8e3f50e6&Account=${_rechargeController.number.value}&Amount=${_rechargeController.rechargeAmount.value }&SPKey=$spky&APIRequestID=$rand&GEOCode=27.2046%C2%B0%20N,%2077.4977%C2%B0&CustomerNumber=7054988484&Pincode=226010&Format=1&OutletID=18449&RefID=&fetchBillID=" ;
-
-
-
     try{
          var response=await get(test);
          if(response!=null){
@@ -105,9 +105,72 @@ class APiProvider extends GetConnect {
          }
     }catch(e){
       Get.back();
-      ShowCustomSnackBar().ErrorSnackBar("Recharge succefull");
+      // ShowCustomSnackBar().ErrorSnackBar("Recharge succefull");
     }
   }
+
+
+  getAllRechargetype()async{
+    try{
+      var body={
+        "type":"category"
+      };
+       var response =await post(RegentUrl.getAllRechargeType,body);
+      debugPrint(response.body.toString());
+       if(response.statusCode==200){
+         List<AllRecharegeType> modal=  List<AllRecharegeType>.from((response.body).map((x) => AllRecharegeType.fromJson(x)));
+         debugPrint(modal.toString());
+         return modal;
+       }
+    } catch(e){
+      debugPrint(e.toString());
+      // ShowCustomSnackBar().ErrorSnackBar(e.toString());
+      }
+  }
+
+
+  getUserBalance(String userId)async{
+    var body={
+      "id": userId
+    };
+          try{
+             var response=await post(RegentUrl.getBalance,body);
+          if(response.statusCode==200){
+            CheckBalance modal=  CheckBalance.fromJson(response.body);
+            return modal;
+          }
+          } catch(e){
+            // ShowCustomSnackBar().ErrorSnackBar(e.toString());
+            }
+  }
+
+  getAllCircleList()async{
+    try{
+          var response=await http.get(Uri.parse(RegentUrl.getCircleCode),headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':"Bearer $token",
+          });
+
+
+          print("response.statusCode"+response.body.toString());
+          if(response.statusCode==200){
+            var res=jsonDecode(response.body);
+            CircleCodeModal modal=CircleCodeModal.fromJson(res);
+            debugPrint("1111111111111111111111111111");
+            debugPrint(modal.data.length.toString());
+            debugPrint(modal.data[0].circleName.toString());
+            return modal;
+          }
+    } catch(e){
+          debugPrint(e.toString());
+          debugPrint("e.toString()");
+      // ShowCustomSnackBar().ErrorSnackBar(e.toString());
+    }
+
+  }
+
+
   }
 
 

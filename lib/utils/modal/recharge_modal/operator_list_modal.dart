@@ -16,13 +16,13 @@ class AllOperatorListModal {
    required this.msg,
   });
 
-  List<Datum> data;
+  List<DatumOperator> data;
   int statusCode;
   int errorCode;
   String msg;
 
   factory AllOperatorListModal.fromJson(Map<String, dynamic> json) => AllOperatorListModal(
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<DatumOperator>.from(json["data"].map((x) => DatumOperator.fromJson(x))),
     statusCode: json["statusCode"],
     errorCode: json["errorCode"],
     msg: json["msg"],
@@ -36,8 +36,8 @@ class AllOperatorListModal {
   };
 }
 
-class Datum {
-  Datum({
+class DatumOperator {
+  DatumOperator({
    required this.serviceName,
    required this.operatorName,
    required this.spKey,
@@ -47,7 +47,7 @@ class Datum {
   String operatorName;
   String spKey;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory DatumOperator.fromJson(Map<String, dynamic> json) => DatumOperator(
     serviceName: json["serviceName"],
     operatorName: json["operatorName"],
     spKey: json["spKey"],

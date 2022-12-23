@@ -44,11 +44,25 @@ class RechargeSectionUi extends StatelessWidget {
                       },
                       dropDownInitialValue: "${_rechargeController.MobileOperatorList.value[0]}".obs)),
               SizedBox(height: 25,),
-              CustomTextField(
-                headingName: "Customer Id",
-                hinttext: "${_rechargeController.id}",
-                onTextFieldChange: (val) => debugPrint(val.toString()),
-              ) ,
+
+              CustomContainer(
+                  headingName: "Circle Code",
+                  yourWidget: DropDownContainer(
+                      dropdownHeading: "",
+                      dropDownList: _rechargeController.circleList.value,
+                      on_drop_down_change: (val){
+                        _rechargeController.selectedCircle.value=val.toString();
+                      },
+                      dropDownInitialValue: "${_rechargeController.circleList.value[0]}".obs)),
+
+
+
+
+              // CustomTextField(
+              //   headingName: "Customer Id",
+              //   hinttext: "${_rechargeController.id}",
+              //   onTextFieldChange: (val) => debugPrint(val.toString()),
+              // ) ,
               SizedBox(height: 25,),
               
                // CustomContainer(headingName: "Amount", yourWidget: Row(
