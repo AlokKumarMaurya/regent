@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -103,7 +104,8 @@ class DropDownContainer extends StatelessWidget {
             padding: EdgeInsets.only(left: 5),
             width: widt.value,
             child: DropdownButtonHideUnderline(
-                child: DropdownButton(
+                child:
+                DropdownButton2(
                     isExpanded: true,
                     value: dropDownInitialValue.value,
                     // style: TextStyle(
@@ -127,7 +129,8 @@ class DropDownContainer extends StatelessWidget {
                     onChanged: (val) {
                       on_drop_down_change(val.toString());
                       dropDownInitialValue.value = val.toString();
-                    })))),
+                    })
+            ))),
       ],
     );
   }
@@ -176,3 +179,5 @@ class CustomContainer extends StatelessWidget {
     );
   }
 }
+
+

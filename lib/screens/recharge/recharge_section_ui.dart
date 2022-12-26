@@ -8,14 +8,17 @@ import '../../utils/colors.dart';
 import '../../utils/commom_widget/custom_text_filed.dart';
 
 class RechargeSectionUi extends StatelessWidget {
-   RechargeSectionUi({Key? key}) : super(key: key);
-  RechargeController _rechargeController=Get.put(RechargeController());
-   LoginController _loginController=Get.put(LoginController());
+  RechargeSectionUi({Key? key}) : super(key: key);
+  RechargeController _rechargeController = Get.put(RechargeController());
+  LoginController _loginController = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         Container(
           decoration: BoxDecoration(
             color: Color(0xffffffff),
@@ -31,85 +34,158 @@ class RechargeSectionUi extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               CustomContainer(
                   headingName: "Operator",
                   yourWidget: DropDownContainer(
                       dropdownHeading: "",
-                      dropDownList: _rechargeController.MobileOperatorList.value,
-                      on_drop_down_change: (val){
-                        _rechargeController.operator.value=val.toString();
+                      dropDownList:
+                          _rechargeController.MobileOperatorList.value,
+                      on_drop_down_change: (val) {
+                        debugPrint(val.toString());
+                        _rechargeController.operator.value = val.toString();
+                        // _rechargeController.spKey.value
+                        var a = _rechargeController.allOperatorList.value
+                            .where((element) {
+                          debugPrint(element.spKey);
+                          if (_rechargeController.operator.value ==
+                              element.operatorName) {
+                            _rechargeController.spKey.value =
+                                element.spKey.toString();
+                          }
+                          _rechargeController.operator.value ==
+                              element.operatorName;
+                          return true;
+                        });
+                        debugPrint(a.toString());
+                        debugPrint(_rechargeController.spKey.value.toString());
+                        debugPrint(
+                            "_rechargeController.spKey.value.toString()");
                       },
-                      dropDownInitialValue: "${_rechargeController.MobileOperatorList.value[0]}".obs)),
-              SizedBox(height: 25,),
+                      dropDownInitialValue:
+                          "${_rechargeController.MobileOperatorList.value[0]}"
+                              .obs)),
+              const SizedBox(
+                height: 25,
+              ),
 
               CustomContainer(
                   headingName: "Circle Code",
                   yourWidget: DropDownContainer(
-                      dropdownHeading: "",
+                      dropdownHeading: "Select Circle",
                       dropDownList: _rechargeController.circleList.value,
-                      on_drop_down_change: (val){
-                        _rechargeController.selectedCircle.value=val.toString();
+                      on_drop_down_change: (val) {
+                        _rechargeController.selectedCircle.value =
+                            val.toString();
+                        var a = _rechargeController.tempcircleList.value
+                            .where((element) {
+                          if (element.circleName ==
+                              _rechargeController.selectedCircle.value) {
+                            _rechargeController.ciccleCode.value =
+                                element.circleCode.toString();
+                          }
+                          return true;
+                        });
+                        debugPrint(a.toString());
+                        debugPrint(_rechargeController.ciccleCode.value);
                       },
-                      dropDownInitialValue: "${_rechargeController.circleList.value[0]}".obs)),
-
-
-
+                      dropDownInitialValue:
+                          "${_rechargeController.circleList.value[0]}".obs)),
 
               // CustomTextField(
               //   headingName: "Customer Id",
               //   hinttext: "${_rechargeController.id}",
               //   onTextFieldChange: (val) => debugPrint(val.toString()),
               // ) ,
-              SizedBox(height: 25,),
-              
-               // CustomContainer(headingName: "Amount", yourWidget: Row(
-               //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               //   children: [
-               //     Text("${_rechargeController.rechargeAmount.value}")  ,
-               //     Row(
-               //       children: [
-               //         TextButton(onPressed: (){}, child:Text("See all plans",style:  GoogleFonts.quicksand(
-               //           textStyle: const TextStyle(
-               //               color: AppColors.colourdtext,
-               //               fontWeight: FontWeight.bold,
-               //               fontSize: 20),
-               //         ),)),
-               //         Icon(Icons.navigate_next,color: AppColors.colourdtext,)
-               //       ],
-               //     )
-               //   ],
-               // )) ,
+              const SizedBox(
+                height: 25,
+              ),
 
+              // CustomContainer(headingName: "Amount", yourWidget: Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text("${_rechargeController.rechargeAmount.value}")  ,
+              //     Row(
+              //       children: [
+              //         TextButton(onPressed: (){}, child:Text("See all plans",style:  GoogleFonts.quicksand(
+              //           textStyle: const TextStyle(
+              //               color: AppColors.colourdtext,
+              //               fontWeight: FontWeight.bold,
+              //               fontSize: 20),
+              //         ),)),
+              //         Icon(Icons.navigate_next,color: AppColors.colourdtext,)
+              //       ],
+              //     )
+              //   ],
+              // )) ,
+
+              // CustomTextField(
+              //     headingName: "Amount",
+              //     hinttext: _rechargeController.rechargeAmount.value,
+              //     onTextFieldChange: (val) {
+              //       _rechargeController.rechargeAmount.value=val;
+              //     }
+              // ) ,
+              Container(
+                padding: EdgeInsets.only(left: 10),
+                width: MediaQuery.of(context).size.width,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Amount",
+                  style: GoogleFonts.quicksand(
+                    textStyle: const TextStyle(
+                        color: AppColors.colourdtext,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Obx(() => Text("${_rechargeController.selectedPlan.value}")),
+                  Container(
+                      width: MediaQuery.of(context).size.width - 100,
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                          onPressed: () => _rechargeController.viewPlan(),
+                          child: Text(
+                            "View Plan",
+                            style: GoogleFonts.quicksand(
+                              textStyle: const TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          )))
+                ],
+              ),
+
+              SizedBox(
+                height: 25,
+              ),
               CustomTextField(
-                  headingName: "Amount",
-                  hinttext: "${_rechargeController.rechargeAmount.value}",
+                  headingName: "Phone number",
+                  hinttext: "${_rechargeController.number.value}",
                   onTextFieldChange: (val) {
-                    _rechargeController.rechargeAmount.value=val;
-                  }
-
-              ) ,
-
-
-              SizedBox(height: 25,),
-              CustomTextField(
-                headingName: "Phone number",
-                hinttext: "${_rechargeController.number.value}",
-                onTextFieldChange: (val) {
-                  _rechargeController.number.value=val;
-    }
-
-              ) ,
-              
+                    _rechargeController.number.value = val;
+                  }),
             ],
           ),
         ),
-        SizedBox(height: 30,),
-        ElevatedButton(onPressed: (){
-          _rechargeController.doRecharge();
-        }, child:Text("Recharge"))
+        SizedBox(
+          height: 30,
+        ),
+        ElevatedButton(
+            onPressed: () {
+              _rechargeController.doRecharge();
+            },
+            child: Text("Recharge"))
       ],
     );
   }

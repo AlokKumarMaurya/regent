@@ -7,4 +7,6 @@ class RegentUrl {
   static const getAllRechargeType="https://softfix.in/demo/mxepay/api/user/rejent_view_operators";
    static const getBalance="https://utility.regentcoin.finance/Api/Checkbalance";
    static const getCircleCode="https://roundpay.net/PlanServices/v1/GetCircleCodes";
+ static const getPlanApi="https://roundpay.net/PlanServices/v1/RechargePlan";
+ static const recharge="https://softfix.in/demo/mxepay/api/user/rejentRechargeAPI";
 }

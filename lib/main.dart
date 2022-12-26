@@ -64,7 +64,7 @@ class _MyHomeState extends State<MyHome> {
         body: Center(
             child: Image.asset(
           ConstantImage.logo,
-          scale: 3.2,
+          scale: 1,
         )));
   }
 }

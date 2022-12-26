@@ -26,6 +26,7 @@ class AllRechargeTypeController extends GetxController{
   debugPrint(allRechargeList.value.length.toString()) ;
   debugPrint("allRechargeList.value.length.toString()") ;
   debugPrint(allRechargeList.value[0].toString()) ;
+  getBalance();
     }
   }
   getBalance()async{

@@ -10,9 +10,9 @@ String loginModalToJson(LoginModal data) => json.encode(data.toJson());
 
 class LoginModal {
   LoginModal({
-  required this.success,
-  required this.message,
-  required this.data,
+   required this.success,
+   required this.message,
+   required this.data,
   });
 
   bool success;
@@ -34,24 +34,20 @@ class LoginModal {
 
 class Datum {
   Datum({
-   required this.id,
-   required this.name,
-   required this.email,
+  required  this.id,
+  required  this.name,
   });
 
   String id;
   String name;
-  String email;
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     id: json["id"],
     name: json["name"],
-    email: json["email"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
-    "email": email,
   };
 }
