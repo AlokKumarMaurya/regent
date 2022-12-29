@@ -45,7 +45,7 @@ class _MyHomeState extends State<MyHome> {
   getLoggedInStatus()async{
     isLoggedIn.value=await SharedPrefrences().getLogin();
     debugPrint(isLoggedIn.value.toString()) ;
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) => (isLoggedIn.value)?DashBoard():LoginPage()), (e) => false);
     });
@@ -60,11 +60,20 @@ class _MyHomeState extends State<MyHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-            child: Image.asset(
-          ConstantImage.logo,
-          scale: 1,
-        )));
+        backgroundColor: Colors.black,
+        body: Container(
+          child: Stack(
+            children: [
+              Container(    width:Get.width , height: Get.height,
+                child:  Image.asset("assets/images/splashback.png",fit: BoxFit.cover ,) ,
+              ),
+              Center(
+                  child: Image.asset(
+                   "assets/images/splashGif.gif",
+                scale: 4,
+              )),
+            ],
+          ),
+        ));
   }
 }

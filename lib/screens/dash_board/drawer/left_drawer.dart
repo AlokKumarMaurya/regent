@@ -7,6 +7,7 @@ import '../../../getx_controller/drawer_controller/left_drawe_controller.dart';
 import '../../../getx_controller/login_controller/login_controller.dart';
 import '../../../utils/commom_widget/lsit_tile.dart';
 import '../../../utils/images.dart';
+import '../../drawer screens/transaction_report_screen.dart';
 
 class LeftDrawer extends StatelessWidget {
   LeftDrawer({Key? key}) : super(key: key);
@@ -32,15 +33,18 @@ class LeftDrawer extends StatelessWidget {
               Container(
                 height: MediaQuery.of(context).size.height / 5,
                 decoration: BoxDecoration(color: Color(0xff500dc0)),
-                child: UserAccountsDrawerHeader(
+                child: UserAccountsDrawerHeader( currentAccountPictureSize: Size(60,60),
                   // currentAccountPictureSize: Size.fromWidth(100),
                     decoration: BoxDecoration(color: Color(0xff500dc0)),
-                    currentAccountPicture: Image.asset(ConstantImage.logo,width: 100,),
+                    currentAccountPicture: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(ConstantImage.logo,),
+                    ),
                     accountName:                   Text("${_leftDraweController.name.value}",
 
                       // Text("${_loginController.loginDetails.value!.data[0].name}",
                       style: TextStyle(
-                      fontSize: 18
+                      fontSize: 15
                     ),),
                     accountEmail: Text("",maxLines: 2,)
                 ),
@@ -117,7 +121,9 @@ class LeftDrawer extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomListTile(
-                        handle_tap: (){},
+                        handle_tap: (){
+                          Get.to(()=>TransactionReports());
+                        },
                         titleWidget: Text(
                           "Transaction Report",
                           style: draweTitleStyle,

@@ -10,6 +10,7 @@ import 'package:regent/utils/shred_prefrences/shared_prefrences.dart';
 
 import '../getx_controller/dash_board_controller/all_recharege_type_controller.dart';
 import '../getx_controller/recharge_controller/recharhe_controller.dart';
+import '../utils/modal/DTHModel/dthModel.dart';
 import '../utils/modal/all_dash_board_modals/all_recharge_type.dart';
 import '../utils/modal/drawer_modal/check_balance.dart';
 import '../utils/modal/login_modal.dart';
@@ -17,6 +18,7 @@ import '../utils/modal/recharge_modal/circle_code_modal.dart';
 import '../utils/modal/recharge_modal/operator_list_modal.dart';
 import '../utils/modal/recharge_modal/recharge_modal.dart';
 import '../utils/modal/recharge_modal/view_all_plan_modal.dart';
+import '../utils/modal/transaction History Model/transaction_history_model.dart';
 import '../utils/snackbar.dart';
 
 class APiProvider extends GetConnect {
@@ -73,22 +75,40 @@ class APiProvider extends GetConnect {
   }
 
   makeRecharge() async {
-    AllRechargeTypeController _all=Get.put(AllRechargeTypeController());
+    AllRechargeTypeController _all = Get.put(AllRechargeTypeController());
     String UserId = await SharedPrefrences().getIdofUser();
-    print("User Id"+UserId.toString());
     RechargeController _rechargeController = Get.put(RechargeController());
+    var titleName = SharedPrefrences().getTitleName();
     var spky;
-    if (_rechargeController.operator.value == "Airtel") {
-      spky = 3;
-    } else if (_rechargeController.operator.value == "Bsnl") {
-      spky = 4;
-    } else if (_rechargeController.operator.value == "Vodafone") {
-      spky = 37;
-    } else if (_rechargeController.operator.value == "Reliance Jio") {
-      spky = 116;
-    } else if (_rechargeController.operator.value == "Idea") {
-      spky = 12;
+    if (titleName == "Prepaid ") {
+      if (_rechargeController.operator.value == "Airtel") {
+        spky = 3;
+      } else if (_rechargeController.operator.value == "Bsnl") {
+        spky = 4;
+      } else if (_rechargeController.operator.value == "Vodafone") {
+        spky = 37;
+      } else if (_rechargeController.operator.value == "Reliance Jio") {
+        spky = 116;
+      } else if (_rechargeController.operator.value == "Idea") {
+        spky = 12;
+      }
+    } else if (titleName == "DTH") {
+      if (_rechargeController.operator.value == "Airtel Digital TV") {
+        spky = 51;
+      } else if (_rechargeController.operator.value == "Dish TV") {
+        spky = 53;
+      } else if (_rechargeController.operator.value == "Sun Direct") {
+        spky = 54;
+      } else if (_rechargeController.operator.value == "Tata Sky") {
+        spky = 55;
+      } else if (_rechargeController.operator.value == "Videocon D2h") {
+        spky = 56;
+      }
+    } else {
+      ShowCustomSnackBar().ErrorSnackBar("Spkey issue");
     }
+
+
     var rand = DateTime.now();
     /*var body={
       "UserID":15895,
@@ -105,7 +125,7 @@ class APiProvider extends GetConnect {
       "RefID": ""   ,
       "fetchBillID":   ""
     } ;*/
-    var  body = {
+    var body = {
       "SPKey": spky.toString(),
       "GEOCode": "27.2046° N, 77.4977°",
       "Pincode": "226010",
@@ -114,25 +134,39 @@ class APiProvider extends GetConnect {
       "user_id": UserId,
     };
 
-             print("asdads"+body.toString())     ;
+    print("asdads" + body.toString());
     try {
-      var response = await http.post(Uri.parse(RegentUrl.recharge), body:body);
-                            debugPrint("asdads"+response.body.toString());
-                            debugPrint(response.statusCode.toString());
-      if (response.statusCode==200) {
-
-        RechargeModal modal =rechargeModalFromJson(response.body);
+      var response = await http.post(Uri.parse(RegentUrl.recharge), body: body);
+      debugPrint("asdads" + response.body.toString());
+      debugPrint(response.statusCode.toString());
+      _rechargeController.rechargeAmount.value="";
+      _rechargeController.selectedPlan.value="";
+      _rechargeController.rechargeAmount.value="";
+      _rechargeController.number.value="";
+      if (response.statusCode == 200) {
+        RechargeModal modal = rechargeModalFromJson(response.body);
 
         _all.getBalance();
-        Get.back();
+        //  Get.back();
         return modal;
       }
     } catch (e) {
-
+      _rechargeController.rechargeAmount.value="";
+      _rechargeController.selectedPlan.value="";
+      _rechargeController.rechargeAmount.value="";
+      _rechargeController.number.value="";
       Get.back();
-     print(e.toString());
+      print(e.toString());
       // ShowCustomSnackBar().ErrorSnackBar("Recharge succefull");
     }
+    _rechargeController.number.value="";
+    _rechargeController.rechargeAmount.value="";
+    _rechargeController.selectedPlan.value="";
+    _rechargeController.rechargeAmount.value="";
+       debugPrint(_rechargeController.number.value);
+       debugPrint("_rechargeController.number.value");
+    // _rechargeController.="";
+
   }
 
   getAllRechargetype() async {
@@ -152,12 +186,34 @@ class APiProvider extends GetConnect {
     }
   }
 
+
+transactionHistory() async {
+  String UserId = await SharedPrefrences().getIdofUser();
+    try {
+      var body = {"id": UserId};
+      var response = await post(RegentUrl.transactionHistory, body);
+      debugPrint("Transaction History Response==>>${response.body}");
+      if (response.statusCode == 200) {
+
+        TransactionHistory modal =
+        TransactionHistory.fromJson((response.body));
+        return modal;
+
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      // ShowCustomSnackBar().ErrorSnackBar(e.toString());
+    }
+  }
+
   getUserBalance(String userId) async {
     var body = {"id": userId};
     try {
-      var response = await post(RegentUrl.getBalance, body);
+      debugPrint("get user balance");
+      var response = await http.post(Uri.parse(RegentUrl.getBalance),body: body);
       if (response.statusCode == 200) {
-        CheckBalance modal = CheckBalance.fromJson(response.body);
+        debugPrint("get user balance"+response.body);
+        CheckBalance modal = CheckBalance.fromJson(jsonDecode(response.body));
         return modal;
       }
     } catch (e) {
@@ -192,22 +248,52 @@ class APiProvider extends GetConnect {
 
   getAllPlan() async {
     RechargeController _rechargeController = Get.put(RechargeController());
+    var titleName = SharedPrefrences().getTitleName();
+    var Url = "";
+    print("titleName" + titleName + "asdads");
+
+    if (titleName == "Prepaid ") {
+      Url = RegentUrl.rechargePlan;
+    } else if (titleName == "DTH") {
+      Url = RegentUrl.dthRechargePlan;
+    } else {
+      ShowCustomSnackBar().ErrorSnackBar("Title Name is Not Correct");
+    }
+
     try {
-      // https://roundpay.net/PlanServices/v1/RechargePlan?spkey=6701&circleId=11
-      var response = await get(
-          RegentUrl.getPlanApi +
-              "?spkey=${_rechargeController.spKey.value}&circleId=${_rechargeController.ciccleCode.value}",
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': "Bearer $token",
-          });
-      debugPrint(response.statusCode.toString());
+      debugPrint(
+          "viePlan Response==>" + _rechargeController.spKey.value.toString());
+      debugPrint("viePlan Response==>" +
+          _rechargeController.ciccleCode.value.toString());
+      Map body = {
+        "spkey": _rechargeController.spKey.value,
+        "circleId": _rechargeController.ciccleCode.value
+      };
+
+      var response =
+          await http.post(Uri.parse(Url), body: body);
+      debugPrint("viePlan Response==>" + response.body.toString());
+      debugPrint("viePlan Response==>" + response.statusCode.toString());
+
       if (response.statusCode == 200) {
-        VIewAllPlanModal modal = VIewAllPlanModal.fromJson(response.body);
-        return modal;
+        if (titleName == "Prepaid ") {
+          VIewAllPlanModal modal =
+              VIewAllPlanModal.fromJson(jsonDecode(response.body));
+
+          return modal;
+        } else if (titleName == "DTH") {
+          ShowCustomSnackBar().ErrorSnackBar("In data Model ");
+          DthModel model = DthModel.fromJson(jsonDecode(response.body));
+          
+          return model;
+        } else {
+          ShowCustomSnackBar().ErrorSnackBar("Model is Not Correct");
+        }
       }
+    //  Get.back();
     } catch (e) {
+      // Get.back();
+      print(e.toString());
       ShowCustomSnackBar().ErrorSnackBar(e.toString());
     }
   }

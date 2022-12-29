@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../getx_controller/login_controller/login_controller.dart';
 import '../../getx_controller/recharge_controller/recharhe_controller.dart';
 import '../../utils/colors.dart';
 import '../../utils/commom_widget/custom_text_filed.dart';
+import '../../utils/shred_prefrences/shared_prefrences.dart';
 
 class RechargeSectionUi extends StatelessWidget {
   RechargeSectionUi({Key? key}) : super(key: key);
   RechargeController _rechargeController = Get.put(RechargeController());
   LoginController _loginController = Get.put(LoginController());
-
+    RxString test="Phone Number".obs;
   @override
   Widget build(BuildContext context) {
+    var titleName = SharedPrefrences().getTitleName();
+
+    if (titleName == "Prepaid ") {
+      test.value="Phone Number";
+    } else if (titleName == "DTH") {
+      test.value="Customer Id";
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -129,7 +140,7 @@ class RechargeSectionUi extends StatelessWidget {
               //     }
               // ) ,
               Container(
-                padding: EdgeInsets.only(left: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 width: MediaQuery.of(context).size.width,
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -142,39 +153,42 @@ class RechargeSectionUi extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Obx(() => Text("${_rechargeController.selectedPlan.value}")),
-                  Container(
-                      width: MediaQuery.of(context).size.width - 100,
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                          onPressed: () => _rechargeController.viewPlan(),
-                          child: Text(
-                            "View Plan",
-                            style: GoogleFonts.quicksand(
-                              textStyle: const TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          )))
-                ],
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10),border: Border.all(color: Colors.grey)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Obx(() =>
+                        Text("${_rechargeController.selectedPlan.value}")),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 5, 5)),
+                        onPressed: () => _rechargeController.viewPlan(),
+                        child: Text(
+                          "View Plan",
+                          style: GoogleFonts.quicksand(
+                            textStyle: const TextStyle(fontSize: 15),
+                          ),
+                        ))
+                  ],
+                ),
               ),
 
               SizedBox(
                 height: 25,
               ),
-              CustomTextField(
-                  headingName: "Phone number",
-                  hinttext: "${_rechargeController.number.value}",
+              Obx(()=>CustomTextField(
+                  lengthInput: LengthLimitingTextInputFormatter(10),
+                  inputType: TextInputType.number,
+                  headingName: test.value,
+                  hinttext: _rechargeController.number,
                   onTextFieldChange: (val) {
+                    debugPrint(_rechargeController.number.value);
                     _rechargeController.number.value = val;
-                  }),
+                  })),
             ],
           ),
         ),

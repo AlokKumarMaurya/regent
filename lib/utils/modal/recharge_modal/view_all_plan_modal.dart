@@ -10,19 +10,43 @@ String vIewAllPlanModalToJson(VIewAllPlanModal data) => json.encode(data.toJson(
 
 class VIewAllPlanModal {
   VIewAllPlanModal({
-  required this.data,
-  required this.statusCode,
-  required this.errorCode,
-  required this.msg,
+  required  this.message,
+  required  this.data,
+  required  this.status,
   });
 
+  String message;
   VIewAllPlanModalData data;
+  bool status;
+
+  factory VIewAllPlanModal.fromJson(Map<String, dynamic> json) => VIewAllPlanModal(
+    message: json["message"],
+    data: VIewAllPlanModalData.fromJson(json["data"]),
+    status: json["status"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "message": message,
+    "data": data.toJson(),
+    "status": status,
+  };
+}
+
+class VIewAllPlanModalData {
+  VIewAllPlanModalData({
+   required this.data,
+   required this.statusCode,
+   required this.errorCode,
+   required this.msg,
+  });
+
+  PurpleData data;
   int statusCode;
   int errorCode;
   String msg;
 
-  factory VIewAllPlanModal.fromJson(Map<String, dynamic> json) => VIewAllPlanModal(
-    data: VIewAllPlanModalData.fromJson(json["data"]),
+  factory VIewAllPlanModalData.fromJson(Map<String, dynamic> json) => VIewAllPlanModalData(
+    data: PurpleData.fromJson(json["data"]),
     statusCode: json["statusCode"],
     errorCode: json["errorCode"],
     msg: json["msg"],
@@ -36,20 +60,20 @@ class VIewAllPlanModal {
   };
 }
 
-class VIewAllPlanModalData {
-  VIewAllPlanModalData({
+class PurpleData {
+  PurpleData({
    required this.statusCode,
    required this.data,
    required this.msg,
   });
 
   int statusCode;
-  DataData data;
+  FluffyData data;
   String msg;
 
-  factory VIewAllPlanModalData.fromJson(Map<String, dynamic> json) => VIewAllPlanModalData(
+  factory PurpleData.fromJson(Map<String, dynamic> json) => PurpleData(
     statusCode: json["statusCode"],
-    data: DataData.fromJson(json["data"]),
+    data: FluffyData.fromJson(json["data"]),
     msg: json["msg"],
   );
 
@@ -60,14 +84,14 @@ class VIewAllPlanModalData {
   };
 }
 
-class DataData {
-  DataData({
-   required this.types,
+class FluffyData {
+  FluffyData({
+    required this.types,
   });
 
   List<TypeType> types;
 
-  factory DataData.fromJson(Map<String, dynamic> json) => DataData(
+  factory FluffyData.fromJson(Map<String, dynamic> json) => FluffyData(
     types: List<TypeType>.from(json["types"].map((x) => TypeType.fromJson(x))),
   );
 
@@ -78,8 +102,8 @@ class DataData {
 
 class TypeType {
   TypeType({
-  required  this.pType,
-  required  this.pDetails,
+  required this.pType,
+  required this.pDetails,
   });
 
   String pType;

@@ -1,4 +1,4 @@
-package com.example.regent
+package com.regent.pay
 
 import io.flutter.embedding.android.FlutterActivity
 

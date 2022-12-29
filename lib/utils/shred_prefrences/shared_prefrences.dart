@@ -8,6 +8,7 @@ class SharedPrefrences{
   static const loginKey="Login";
    static const idPref="idPref";
    static const nameKey="Name";
+   static const titleName="TitleName";
 
 
   void saveLoginStatus(bool setValue){
@@ -25,8 +26,14 @@ class SharedPrefrences{
   void saveId(String id){
     box.write(idPref, id);
   }
+  void saveTitleName(String title){
+    box.write(titleName, title);
+  }
 
-  String getIdofUser(){
+  String getTitleName(){
+    return box.read(titleName)??"";
+  }
+ String getIdofUser(){
     return box.read(idPref)??"";
   }
 

@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,17 +9,22 @@ import '../colors.dart';
 class CustomTextField extends StatelessWidget {
   CustomTextField(
       {Key? key,
+      required this.inputType,
+      required this.lengthInput,
       required this.headingName,
       required this.hinttext,
       required this.onTextFieldChange(String a)})
       : super(key: key);
   String headingName;
-  String hinttext;
+  LengthLimitingTextInputFormatter lengthInput;
+  TextInputType inputType;
+  RxString hinttext;
   Function onTextFieldChange;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       // decoration: BoxDecoration(
       //   color: Color(0xffffffff),
       //   borderRadius: BorderRadius.circular(6),
@@ -46,21 +52,25 @@ class CustomTextField extends StatelessWidget {
           SizedBox(
             height: 3,
           ),
-          TextFormField(
-            onChanged: (val) => onTextFieldChange(val),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: hinttext,
-              hintStyle: TextStyle(
-                  color: AppColors.colourdtext,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 13),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey)),
+            child: TextFormField(
+              keyboardType: inputType,
+              inputFormatters: [lengthInput],
+              onChanged: (val) => onTextFieldChange(val),
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: hinttext.value,
+                hintStyle: TextStyle(
+                    color: AppColors.colourdtext,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 13),
+              ),
             ),
           ),
-          Divider(
-            color: AppColors.colourdtext,
-            height: 4,
-          )
         ],
       ),
     );
@@ -79,6 +89,7 @@ class DropDownContainer extends StatelessWidget {
   final RxString dropDownInitialValue;
   final List dropDownList;
   final Function on_drop_down_change;
+
   @override
   Widget build(BuildContext context) {
     RxDouble filedHeight = 100.0.obs;
@@ -98,8 +109,36 @@ class DropDownContainer extends StatelessWidget {
         //         fontSize: 16),
         //   ),
         // ),
-        SizedBox(height: 3,),
+        SizedBox(
+          height: 3,
+        ),
         Obx(() => Container(
+            height: 45,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(width: 1.1, color: Colors.grey),
+            ),
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    hint: const Text("Select Nominee Identification",
+                        style: TextStyle(
+                          color: Color(0xffC8C7CE),
+                        )),
+                    items: dropDownList.map((e) {
+                      return DropdownMenuItem(
+                          value: e.toString(), child: Text(e.toString()));
+                    }).toList(),
+                    onChanged: (val) {
+                      on_drop_down_change(val.toString());
+                      dropDownInitialValue.value = val.toString();
+                    },
+                    value: dropDownInitialValue.value,
+                  ),
+                )))),
+        /*  Obx(() => Container(
           height: 30,
             padding: EdgeInsets.only(left: 5),
             width: widt.value,
@@ -130,21 +169,23 @@ class DropDownContainer extends StatelessWidget {
                       on_drop_down_change(val.toString());
                       dropDownInitialValue.value = val.toString();
                     })
-            ))),
+            ))),*/
       ],
     );
   }
 }
 
-
 class CustomContainer extends StatelessWidget {
-   CustomContainer({Key? key,required this.headingName,required this.yourWidget}) : super(key: key);
-   String  headingName;
-   Widget yourWidget;
+  CustomContainer(
+      {Key? key, required this.headingName, required this.yourWidget})
+      : super(key: key);
+  String headingName;
+  Widget yourWidget;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       // decoration: BoxDecoration(
       //   color: Color(0xffffffff),
       //   borderRadius: BorderRadius.circular(6),
@@ -170,14 +211,8 @@ class CustomContainer extends StatelessWidget {
             ),
           ),
           yourWidget,
-          Divider(
-            color: AppColors.colourdtext,
-            height: 4,
-          )
         ],
       ),
     );
   }
 }
-
-

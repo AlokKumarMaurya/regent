@@ -1,9 +1,14 @@
+import 'package:carousel_indicator/carousel_indicator.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:regent/screens/recharge/recharge_home_page.dart';
+import 'package:regent/utils/shred_prefrences/shared_prefrences.dart';
 import 'package:regent/utils/snackbar.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../getx_controller/dash_board_controller/all_recharege_type_controller.dart';
 import '../../getx_controller/dash_board_controller/dashbora_controller.dart';
@@ -87,7 +92,7 @@ class DashBoard extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            slider(),
+            slider1(),
             const SizedBox(
               height: 20,
             ),
@@ -105,6 +110,55 @@ class DashBoard extends StatelessWidget {
       ),
     );
   }
+  List<Widget> _demo=[
+    Container(height: 300,color: Colors.amber),
+    Container(height: 300,color: Colors.black),
+    Container(height: 300,color: Colors.blue),
+    Container(height: 300,color: Colors.green),
+  ];
+  RxInt pageIndex=0.obs;
+  Widget slider1(){
+    return
+     Obx(()=> Column(
+       children: [
+         CarouselSlider(
+           options: CarouselOptions(
+             height: 140.0,   onPageChanged: (int index,CarouselPageChangedReason){
+
+             pageIndex.value=index;
+
+
+
+           },
+             reverse: false,
+             viewportFraction: 1.0,
+             initialPage: 0,
+             autoPlay: true,),
+           items:images.map((i) {
+             return Builder(
+               builder: (BuildContext context) {
+                 return Container(
+
+                     margin: EdgeInsets.symmetric(horizontal: 5.0),
+                     decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(10)
+                     ),
+                     child: Image.asset(i,fit: BoxFit.contain,)
+                 );
+               },
+             );
+           }).toList(),
+         ),
+         CarouselIndicator(
+           
+           color: Colors.grey,  activeColor: Colors.yellow, space: 3,
+           count: images.length,
+           index: pageIndex.value,
+         ),
+       ],
+     ));
+  }
+
 
   Widget slider() {
     return Column(
@@ -500,7 +554,7 @@ class DashBoard extends StatelessWidget {
         .toString());
     debugPrint(
         "_allRechargeTypeController.allRechargeList.value.length.toString()");
-    return Obx(()=>(Container(
+    return Obx(()=>(_allRechargeTypeController.allRechargeList.isNotEmpty?Container(
       child: ListView.builder(
         itemCount: _allRechargeTypeController.allRechargeList.value.length,
         physics: NeverScrollableScrollPhysics(),
@@ -545,10 +599,15 @@ class DashBoard extends StatelessWidget {
                       debugPrint("_allRechargeTypeController.allRechargeList.value[index].data.length.toString()");
                       return InkWell(
                         onTap: () {
+
+
                           debugPrint(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString());
                           debugPrint("_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString()");
                          bool temp= _rechargeController.filterOperatorList(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString());
                             temp?   Get.to(RechargeHomePage(title: "${_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name}",)):ShowCustomSnackBar().SuccessSnackBar("Service Coming Soon");
+
+                          SharedPrefrences().saveTitleName(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name??"--") ;
+
                         },
                         child: Container(
                           child: Column(
@@ -571,7 +630,7 @@ class DashBoard extends StatelessWidget {
                               Center(
                                 child: Text(
                                         textAlign: TextAlign.center,
-                                    "${_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name}",),
+                                    "${_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name}",overflow: TextOverflow.ellipsis,),
                               )
                             ],
                           ),
@@ -583,7 +642,10 @@ class DashBoard extends StatelessWidget {
           ):SizedBox();
         },
       ),
-    )));
+    ):
+    ShimmerWidget()
+    
+    ));
   }
 
   List<Widget> indicators(imagesLength, currentIndex) {
@@ -599,3 +661,95 @@ class DashBoard extends StatelessWidget {
     });
   }
 }
+      Widget ShimmerWidget(){
+  return Shimmer.fromColors(
+    baseColor: Colors.grey,
+    highlightColor: Colors.white,
+    child:  Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Recharge",style:TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold
+      ),),
+          SizedBox(height: 20,),
+          GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                crossAxisSpacing: 5.0,      childAspectRatio: 4/4.5,
+                mainAxisSpacing: 15.0,
+              ),
+              itemCount:4 ,
+              itemBuilder: (context, gridindex) {
+
+                return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(    height:55,     width: 55,
+                        decoration:BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xffede7f8),
+                        ),
+                      
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          "Regent Pay",overflow: TextOverflow.ellipsis,),
+                      )
+                    ],
+                  ),
+                );
+              }),
+          SizedBox(height: 20,),
+          Text("Utility",style:TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.bold
+      ),),
+          SizedBox(height: 20,),
+          GridView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 15.0,   childAspectRatio: 4/4.5,
+              ),
+              itemCount:12 ,
+              itemBuilder: (context, gridindex) {
+
+                return Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(    height:55,     width: 55,
+                        decoration:BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xffede7f8),
+                        ),
+
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Center(
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          "Regent Pay",overflow: TextOverflow.ellipsis,),
+                      )
+                    ],
+                  ),
+                );
+              }),
+        ],
+      ),
+    ),
+  );
+      }
