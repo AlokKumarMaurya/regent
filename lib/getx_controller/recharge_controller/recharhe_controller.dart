@@ -35,6 +35,7 @@ class RechargeController extends GetxController {
   RxString selectedPlan = "Select Plan".obs;
 
   getAllOperatorList() async {
+    debugPrint("00000000000000000000000000000000000");
     var response = await APiProvider().getAllServiceOperator();
     if (response != null) {
       AllOperatorListModal modal = response;
@@ -50,6 +51,7 @@ class RechargeController extends GetxController {
       }).toList();
 
       debugPrint(MobileOperatorList.value.toString());
+      debugPrint("MobileOperatorList.value.toString(");
     }
   }
 
@@ -96,22 +98,39 @@ class RechargeController extends GetxController {
   }
 
   bool filterOperatorList(String type) {
+    // debugPrint(allOperatorList.value[0].serviceName);
+    for(int i=0;i<allOperatorList.value.length;i++){
+      debugPrint(allOperatorList.value[i].serviceName.toString());
+    }
+    // debugPrint("test${type}test");
+    // debugPrint("typetypetypetypetypetype");
     MobileOperatorList.value.clear();
     SpKeyOperaterList.value.clear();
-    allOperatorList.where((p) {
+    var a=allOperatorList.value.forEach((element) {debugPrint(element.serviceName.toString());});
+
+    // debugPrint(a);
+    var temp=allOperatorList.where((p) {
+      debugPrint(p.serviceName.toString());
+    debugPrint("p.serviceName.toString()");
       if (p.serviceName == type) {
         MobileOperatorList.value.add(p.operatorName);
         SpKeyOperaterList.value.add(p.spKey);
       }
+      p.serviceName=="Recharge Plan";
       return true;
     }).toList();
+    debugPrint(temp.toString());
+    debugPrint("temp.toString()");
+    debugPrint(MobileOperatorList.value.toString());
     if (MobileOperatorList.value.length > 1) {
       operator.value = MobileOperatorList.value[0];
       spKey.value = SpKeyOperaterList.value[0];
-
       return true;
-    } else
+    } else {
+      debugPrint(MobileOperatorList.value.toString());
+      debugPrint("MobileOperatorList.value.toString()");
       return false;
+    }
   }
 
   void getCircleCode() async {

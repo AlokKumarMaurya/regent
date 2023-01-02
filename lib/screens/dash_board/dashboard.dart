@@ -599,11 +599,14 @@ class DashBoard extends StatelessWidget {
                       debugPrint("_allRechargeTypeController.allRechargeList.value[index].data.length.toString()");
                       return InkWell(
                         onTap: () {
-
-
-                          debugPrint(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString());
-                          debugPrint("_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString()");
+                          // debugPrint(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString());
+                          // debugPrint("_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString()");
+                          _rechargeController.allOperatorList.value.forEach((element) {debugPrint(element.serviceName.toString());
+                          // debugPrint("3232323232323232323232323");
+    });
                          bool temp= _rechargeController.filterOperatorList(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].op_name.toString());
+                         debugPrint(temp.toString());
+                         // debugPrint('temp.toString()temp.toString()temp.toString()');
                             temp?   Get.to(RechargeHomePage(title: "${_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name}",)):ShowCustomSnackBar().SuccessSnackBar("Service Coming Soon");
 
                           SharedPrefrences().saveTitleName(_allRechargeTypeController.allRechargeList.value[index].data[gridindex].name??"--") ;

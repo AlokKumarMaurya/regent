@@ -57,16 +57,23 @@ class APiProvider extends GetConnect {
   }
 
   getAllServiceOperator() async {
+    debugPrint("00000000000000000000==================888888888888888");
     try {
-      var response = await get(RegentUrl.getAllOperator, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': token,
-      });
+      var response = await http.post(Uri.parse(RegentUrl.getAllOperator),
+      //     headers: {
+      //   'Content-Type': 'application/json',
+      //   'Accept': 'application/json',
+      //   'Authorization': token,
+      // }
+      );
+      debugPrint(response.body.toString());
+      debugPrint("response.body.toString()response.============body.toString()response.body.toString()");
       if (response != null) {
-        debugPrint(response.toString());
-        AllOperatorListModal modal =
-            AllOperatorListModal.fromJson((response.body));
+        debugPrint(response.body.toString());
+        debugPrint("response.toString()response.toString()response.toString()response.toString()response.toString()");
+        AllOperatorListModal modal = AllOperatorListModal.fromJson(jsonDecode(response.body));
+        debugPrint(modal.data.toString());
+        debugPrint("modal.data.toString()modal.data.toString()modal.data.toString()modal.data.toString()==========00");
         return modal;
       }
     } catch (e) {
@@ -224,11 +231,13 @@ transactionHistory() async {
   getAllCircleList() async {
     try {
       var response =
-          await http.get(Uri.parse(RegentUrl.getCircleCode), headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': "Bearer $token",
-      });
+          await http.post(Uri.parse(RegentUrl.getCircleCode),
+      //         headers: {
+      //   'Content-Type': 'application/json',
+      //   'Accept': 'application/json',
+      //   'Authorization': "Bearer $token",
+      // }
+      );
 
       print("response.statusCode" + response.body.toString());
       if (response.statusCode == 200) {
